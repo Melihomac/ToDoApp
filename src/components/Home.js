@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import ToDo from "./components/ToDo";
-import { addTodo, getAllToDo, updateToDo, deleteToDo } from "./utils/HandleApi";
+import ToDo from "./ToDo";
+import { addTodo, getAllToDo, updateToDo, deleteToDo } from "../utils/HandleApi";
 
-function App() {
+function Home() {
   const [toDo, setToDo] = useState([]);
   const [text, setText] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -55,4 +55,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
