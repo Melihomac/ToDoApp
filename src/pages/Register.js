@@ -21,15 +21,18 @@ function Register() {
         setEmail("");
         setPassword("");
         setRedirect(true);
+      })
+      .catch((error) => {
+        console.error("There was an error registering the user!", error);
       });
   }
 
   if (redirect) {
-    return <Navigate to={"/"} />;
+    return <Navigate to="/" />;
   }
 
   return (
-    <form action="" onSubmit={(e) => registerUser(e)}>
+    <form onSubmit={registerUser}>
       <input
         type="email"
         placeholder="email"
@@ -44,7 +47,7 @@ function Register() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
-      <button type="submit">register</button>
+      <button type="submit">Register</button>
     </form>
   );
 }
