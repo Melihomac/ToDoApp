@@ -1,57 +1,60 @@
-import { useEffect, useState } from "react";
-import ToDo from "./components/ToDo";
-import { addTodo, getAllToDo, updateToDo, deleteToDo } from "./utils/HandleApi";
+import "./index.css";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Register from "./pages/Register";
+import UserContext from "./pages/UserContext";
+import axios from "axios";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [toDo, setToDo] = useState([]);
-  const [text, setText] = useState("");
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [toDoId, setToDoId] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    getAllToDo(setToDo);
+    axios
+      .get("http://localhost:5001/user", { withCredentials: true })
+      .then((response) => {
+        setEmail(response.data.email);
+      });
   }, []);
 
-  const updateMode = (_id, text) => {
-    setIsUpdating(true);
-    setText(text);
-    setToDoId(_id);
-  };
+  function logout() {
+    axios
+      .post("http://localhost:5001/logout", {}, { withCredentials: true })
+      .then(() => setEmail(""));
+  }
 
   return (
-    <div className="App">
-      <div className="container">
-        <h1>ToDo App</h1>
-        <div className="top">
-          <input
-            type="text"
-            placeholder="Add ToDos"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <div
-            className="add"
-            onClick={
-              isUpdating
-                ? () =>
-                    updateToDo(toDoId, text, setToDo, setText, setIsUpdating)
-                : () => addTodo(text, setText, setToDo)
-            }>
-            {isUpdating ? "Update" : "Add"}
-          </div>
-        </div>
-        <div className="list">
-          {toDo.map((item) => (
-            <ToDo
-              key={item._id}
-              text={item.text}
-              updateMode={() => updateMode(item._id, item.text)}
-              deleteToDo={() => deleteToDo(item._id, setToDo)}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <UserContext.Provider value={{ email, setEmail }}>
+      <BrowserRouter>
+        <nav>
+          <Link to="/">Home</Link>
+          {!email && (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+          {!!email && (
+            <a
+              href="/logout"
+              onClick={(e) => {
+                e.preventDefault();
+                logout();
+              }}>
+              Logout
+            </a>
+          )}
+        </nav>
+        <main>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
 }
 
