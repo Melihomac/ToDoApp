@@ -25,11 +25,6 @@ Welcome to my ToDoApp project. This project was made upon request.
 1.  Go to the frontend folder and `npm start`
 2.  Go to the backend folder and `nodemon Server.js`
 
-### Firebase Configurations
-
-1. Create FirebaseProject
-2. Create FirebaseConfig.tsx file on your project root folder
-
 ### Folder Structure
 
  ```
